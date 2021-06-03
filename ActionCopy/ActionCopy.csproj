@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NeoVirus\VoidNetworking\VoidNetworking.csproj" />
+    <ProjectReference Include="..\VoidNetworking\VoidNetworking.csproj" />
   </ItemGroup>
 
   <ItemGroup>

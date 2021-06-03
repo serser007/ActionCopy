@@ -17,6 +17,8 @@ namespace ActionCopy
     public partial class ActionCopyForm : Form
     {
         [Module]
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+        [SuppressMessage("ReSharper", "UnusedType.Local")]
         private static class Module
         {
             [ModuleReceiver(0)]
@@ -131,6 +133,12 @@ namespace ActionCopy
         private void startClientButton_Click(object sender, EventArgs e)
         {
             client = new VoidClient();
+            client.OnDisconnected += connection =>
+            {
+                Reset();
+                // ReSharper disable once LocalizableElement
+                MessageBox.Show("Unable to connect");
+            };
             client.Connect(hostAddressBox.Text, Port);
             updateTimer.Enabled = true;
             SetUiActiveState();
@@ -139,20 +147,11 @@ namespace ActionCopy
         private void updateTimer_Tick(object sender, EventArgs e)
         {
             Peer.RunQueuedActions();
-            if (isServer)
-            {
-                var point = (Cursor.Position.X, Cursor.Position.Y);
-                connections.ForEach(c => server.SendMessage(0, point, c));
-                connections.ForEach(c => server.SendMessage(1, MouseButtons, c));
-            }
-            else
-            {
-                if (!client.IsAlive)
-                {
-                    Reset();
-                    MessageBox.Show("Unable to connect");
-                }
-            }
+            if (!isServer) return;
+            
+            var point = (Cursor.Position.X, Cursor.Position.Y);
+            connections.ForEach(c => server.SendMessage(0, point, c));
+            connections.ForEach(c => server.SendMessage(1, MouseButtons, c));
         }
 
         
@@ -167,7 +166,8 @@ namespace ActionCopy
 
             if (e.Delta != 0)
             {
-                connections.ForEach(c => server.SendMessage(2, e.Delta, c));
+                var clicks = e.Delta / SystemInformation.MouseWheelScrollDelta;
+                connections.ForEach(c => server.SendMessage(2, clicks, c));
             }
         }
 
@@ -198,7 +198,7 @@ namespace ActionCopy
 
         private void SetMouseWheel(int wheel)
         {
-            DoMouseEvent(MouseEventWheel, wheel);
+            simulator.Mouse.VerticalScroll(wheel);
         }
 
         private void SetKeyDown(Keys keys)

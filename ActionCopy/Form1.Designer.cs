@@ -127,9 +127,9 @@ namespace ActionCopy
             // 
             // refreshServersButton
             // 
-            this.refreshServersButton.Location = new System.Drawing.Point(297, 111);
+            this.refreshServersButton.Location = new System.Drawing.Point(281, 111);
             this.refreshServersButton.Name = "refreshServersButton";
-            this.refreshServersButton.Size = new System.Drawing.Size(75, 31);
+            this.refreshServersButton.Size = new System.Drawing.Size(91, 31);
             this.refreshServersButton.TabIndex = 5;
             this.refreshServersButton.Text = "refresh";
             this.refreshServersButton.UseVisualStyleBackColor = true;
